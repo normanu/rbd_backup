@@ -5,7 +5,7 @@ When you have big volumes and a slow connection it is difficult to backup these 
 With this script you will only have to backup the main version and all the diffs.
 
 
-## TODO
+### TODO
 
 - Make a script to merge the diffs on both sides and check if of and onsite versions are the same.
 
