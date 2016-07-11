@@ -18,8 +18,7 @@ mkdir -p $BACKUP_DIR
 touch $LOG_FILE
 
 # list all volumes in the pool
-# IMAGES=`rbd ls $SOURCEPOOL`
-IMAGES="vm-110-disk-1"
+IMAGES=`rbd ls $SOURCEPOOL`
 TODAY=`date +%Y%m%d`
 
 for LOCAL_IMAGE in $IMAGES; do
@@ -27,7 +26,6 @@ for LOCAL_IMAGE in $IMAGES; do
     SNAP_TODAY=`rbd snap ls $LOCAL_IMAGE |grep $TODAY`
     # check if there is a snapshot made today
     if [[ -z "$SNAP_TODAY" ]]; then
-#	echo "overslaan"
         rbd snap create $LOCAL_IMAGE@$TODAY
 	else
 	echo "$TIMESTAMP   info: image already backed up today" >>$LOG_FILE
