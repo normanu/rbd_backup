@@ -66,12 +66,13 @@ for LOCAL_IMAGE in $IMAGES; do
         rbd export-diff --from-snap $LAST_SNAP $SOURCEPOOL/$LOCAL_IMAGE@$LATEST_SNAP \
                                     $IMAGE_DIR/${LAST_SNAP}_${LATEST_SNAP}  >/dev/null 2>&1
 
+	# Remove old snapshots but leave latest
+	OLD_SNAPS=`rbd snap ls $LOCAL_IMAGE|grep -v "SNAPID" |sort -r |tail -n +2 |awk '{print $2}'`
+	for DELETE_SNAP in $OLD_SNAPS
+	do
+		echo "$TIMESTAMP   removing old snapshot $DELETE_SNAP" >>$LOG_FILE
+		rbd snap rm $LOCAL_IMAGE@$DELETE_SNAP
+	done
+
 done
 
-# Remove old snapshots but leave latest
-$OLD_SNAPS=rbd snap ls vm-110-disk-1|grep -v "SNAPID" |sort -r |tail -n +2 |awk '{print $2}'
-for i in $OLD_SNAPS
-do
-	echo "$TIMESTAMP   removing old snapshot $i"
-	rbd snap rm $i
-done
